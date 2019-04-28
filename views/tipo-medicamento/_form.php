@@ -8,18 +8,32 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="tipo-medicamento-form">
+<?php if ($model->hasErrors()) {
+    \Yii::$app->getSession()->setFlash('error', $model->getErrorSummary(true));
+}
+?>
 
-    <?php $form = ActiveForm::begin(); ?>
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-lg-12 -->
+    <div class="col-lg-12">
+        <!-- begin box -->
+        <div class="box box-success">
+            <div class="box-body">
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+                <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
+                <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
+
+                <div class="form-group">
+                    <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
+
+            </div>
+        </div>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

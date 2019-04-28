@@ -14,7 +14,7 @@ use Yii;
  * @property string $indicacion Indicación
  * @property string $contraindicacion Contraindicación
  * @property string $observacion Observación
- * @property int $stock Stock
+ * @property double $stock Stock
  * @property int $proveedor_id Proveedor
  * @property int $tipo_id Tipo
  * @property string $fecha_registro
@@ -41,8 +41,9 @@ class Medicamento extends \yii\db\ActiveRecord
         return [
             [['codigo', 'nombre', 'indicacion', 'contraindicacion', 'stock', 'proveedor_id', 'tipo_id'], 'required'],
             [['indicacion', 'contraindicacion', 'observacion'], 'string'],
-            [['stock', 'proveedor_id', 'tipo_id'], 'integer'],
+            [['proveedor_id', 'tipo_id'], 'integer'],
             [['fecha_registro'], 'safe'],
+            [['stock'], 'number'],
             [['codigo', 'nombre'], 'string', 'max' => 255],
             [['codigo'], 'unique'],
             [['proveedor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['proveedor_id' => 'id']],
@@ -59,9 +60,9 @@ class Medicamento extends \yii\db\ActiveRecord
             'id' => 'No.',
             'codigo' => 'Código',
             'nombre' => 'Nombre',
-            'indicacion' => 'Indicación',
-            'contraindicacion' => 'Contraindicación',
-            'observacion' => 'Observación',
+            'indicacion' => 'Indicaciones',
+            'contraindicacion' => 'Contraindicaciones',
+            'observacion' => 'Observaciones',
             'stock' => 'Stock',
             'proveedor_id' => 'Proveedor',
             'tipo_id' => 'Tipo',

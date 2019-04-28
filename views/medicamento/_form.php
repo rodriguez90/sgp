@@ -8,32 +8,95 @@ use yii\widgets\ActiveForm;
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="medicamento-form">
+<?php if ($model->hasErrors()) {
+    \Yii::$app->getSession()->setFlash('error', $model->getErrorSummary(true));
+}
+?>
 
-    <?php $form = ActiveForm::begin(); ?>
+<!-- begin row -->
+<div class="row">
+    <!-- begin col-lg-12 -->
+    <div class="col-lg-12">
+        <!-- begin box -->
+        <div class="box box-success">
+            <div class="box-body">
 
-    <?= $form->field($model, 'codigo')->textInput(['maxlength' => true]) ?>
+                <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'proveedor_id')->widget(\kartik\select2\Select2::classname(), [
+                            'data' =>  \yii\helpers\ArrayHelper::map(\Da\User\Model\Profile::find()
+                                ->innerJoin('auth_assignment', 'profile.user_id=auth_assignment.user_id and auth_assignment.item_name="Proveedor"')
+                                ->asArray()
+                                ->all(),'user_id','name'),
+                            'language' => 'es',
+                            'options' => ['placeholder' => 'Seleccione el Proveedor.',
+                                'onchange'=>'                                        
+                                                                             
+                                        '
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => false
+                            ],
+                        ]);?>
+                    </div>
 
-    <?= $form->field($model, 'indicacion')->textarea(['rows' => 6]) ?>
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'tipo_id')->widget(\kartik\select2\Select2::classname(), [
+                            'data' =>  \yii\helpers\ArrayHelper::map(\app\models\TipoMedicamento::find()
+                                ->asArray()
+                                ->all(),'id','nombre'),
+                            'language' => 'es',
+                            'options' => ['placeholder' => 'Seleccione el Tipo.',
+                                'onchange'=>''
+                            ],
+                            'pluginOptions' => [
+                                'allowClear' => false
+                            ],
+                        ]);?>
+                    </div>
 
-    <?= $form->field($model, 'contraindicacion')->textarea(['rows' => 6]) ?>
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'codigo')->textInput(['maxlength' => true]) ?>
+                    </div>
 
-    <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+                </div>
 
-    <?= $form->field($model, 'stock')->textInput() ?>
+                <div class="row">
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'nombre')->textInput(['maxlength' => true]) ?>
+                    </div>
 
-    <?= $form->field($model, 'proveedor_id')->textInput() ?>
+                    <div class="col-lg-4">
 
-    <?= $form->field($model, 'tipo_id')->textInput() ?>
+                        <?= $form->field($model, 'stock')->textInput() ?>
 
-    <?= $form->field($model, 'fecha_registro')->textInput() ?>
+                    </div>
+                </div>
 
-    <div class="form-group">
-        <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
+                <div class="row" >
+                    <div class="col-lg-4">
+
+                        <?= $form->field($model, 'indicacion')->textarea(['rows' => 6]) ?>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'contraindicacion')->textarea(['rows' => 6]) ?>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <?= $form->field($model, 'observacion')->textarea(['rows' => 6]) ?>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+                </div>
+
+                <?php ActiveForm::end(); ?>
+
+            </div>
+        </div>
     </div>
-
-    <?php ActiveForm::end(); ?>
-
 </div>

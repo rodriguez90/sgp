@@ -43,7 +43,7 @@ class m190426_155844_esquema_inicial extends Migration
             'indicacion' => $this->text()->notNull()->comment('Indicación'),
             'contraindicacion' => $this->text()->notNull()->comment('Contraindicación'),
             'observacion' => $this->text()->comment('Observación'),
-            'stock' => $this->integer()->notNull()->comment('Stock'),
+            'stock' => $this->double()->notNull()->comment('Stock'),
             'proveedor_id' => $this->integer()->notNull()->comment('Proveedor'),
             'tipo_id' => $this->integer()->notNull()->comment('Tipo'),
             'fecha_registro' => $this->timestamp()->notNull()->defaultExpression('CURRENT_TIMESTAMP'),

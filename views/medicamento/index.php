@@ -10,35 +10,40 @@ use yii\widgets\Pjax;
 $this->title = 'Medicamentos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="medicamento-index">
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header">
+                <p>
+                    <?= Html::a('Nuevo Medicamento', ['create'], ['class' => 'btn btn-success']) ?>
+                </p>
+            </div>
+            <div class="box-body">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+                <?php Pjax::begin(); ?>
+                <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p>
-        <?= Html::a('Create Medicamento', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => [
+                        'id',
+                        'codigo',
+                        'nombre',
+//                        'indicacion:ntext',
+//                        'contraindicacion:ntext',
+                        //'observacion:ntext',
+                        'stock',
+                        'proveedor_id',
+                        'tipo_id',
+                        //'fecha_registro',
 
-            'id',
-            'codigo',
-            'nombre',
-            'indicacion:ntext',
-            'contraindicacion:ntext',
-            //'observacion:ntext',
-            //'stock',
-            //'proveedor_id',
-            //'tipo_id',
-            //'fecha_registro',
-
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    <?php Pjax::end(); ?>
+                        ['class' => 'yii\grid\ActionColumn'],
+                    ],
+                ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
+    </div>
 </div>

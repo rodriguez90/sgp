@@ -10,32 +10,38 @@ use yii\widgets\Pjax;
 $this->title = 'Pedidos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="pedido-index">
+<div class="row">
+    <div class="col-md-12">
+        <div class="box box-info">
+            <div class="box-header">
 
-    <h1><?= Html::encode($this->title) ?></h1>
-    <?php Pjax::begin(); ?>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
+                <p>
+                    <?= Html::a('Nuevo Pedido', ['create'], ['class' => 'btn btn-success']) ?>
+                </p>
+            </div>
 
-    <p>
-        <?= Html::a('Create Pedido', ['create'], ['class' => 'btn btn-success']) ?>
-    </p>
+            <div class="box-body">
+                <?php Pjax::begin(); ?>
+                <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'codigo',
-            'estado',
-            'observacion:ntext',
-            'usuario_id',
-            //'fecha_registro',
-            //'fecha_entrega',
+                <?= GridView::widget([
+                    'dataProvider' => $dataProvider,
+                    'filterModel' => $searchModel,
+                    'columns' => [
+                        'id',
+                        'codigo',
+                        'estado',
+                        'observacion:ntext',
+                        'usuario_id',
+                        //'fecha_registro',
+                        //'fecha_entrega',
 
-            ['class' => 'yii\grid\ActionColumn'],
-        ],
-    ]); ?>
-    <?php Pjax::end(); ?>
+                        ['class' => 'yii\grid\ActionColumn'],
+                    ],
+                ]); ?>
+                <?php Pjax::end(); ?>
+            </div>
+        </div>
+    </div>
 </div>

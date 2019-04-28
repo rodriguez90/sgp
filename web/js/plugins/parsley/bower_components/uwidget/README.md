@@ -29,7 +29,7 @@ jQuery >= 1.6
           enabled: true,
           name: 'sort',
           values: ['created', 'updated', 'comments'],
-          labels: ['Creation date', 'Update date', 'Comments']
+          labels: ['Creation date', 'Modificar date', 'Comments']
         },
         direction: {
           enabled: true,
