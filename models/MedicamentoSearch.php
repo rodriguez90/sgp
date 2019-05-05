@@ -12,14 +12,17 @@ use app\models\Medicamento;
  */
 class MedicamentoSearch extends Medicamento
 {
+    public $nombreProveedor;
+    public $nombreTipo;
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['id', 'stock', 'proveedor_id', 'tipo_id'], 'integer'],
-            [['codigo', 'nombre', 'indicacion', 'contraindicacion', 'observacion', 'fecha_registro'], 'safe'],
+            [['id', 'proveedor_id', 'tipo_id', 'activo'], 'integer'],
+            [['codigo', 'nombre', 'indicacion', 'contraindicacion', 'observacion', 'fecha_registro', 'nombreProveedor', 'nombreTipo'], 'safe'],
+            [['stock'], 'number'],
         ];
     }
 
@@ -47,7 +50,30 @@ class MedicamentoSearch extends Medicamento
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5
+            ]
         ]);
+
+        $dataProvider->pagination->pageSize = 5;
+
+        $query->joinWith(['proveedor', 'tipo']);
+
+        $query->innerJoin('profile', 'user.id = profile.user_id');
+
+        $query->orderBy([
+            'medicamento.nombre'=>SORT_ASC,
+        ]);
+
+        $dataProvider->sort->attributes['nombreProveedor'] = [
+            'asc'=>['profile.name' => SORT_ASC],
+            'desc'=>['profile.name'=> SORT_DESC] ,
+        ];
+
+        $dataProvider->sort->attributes['nombreTipo'] = [
+            'asc'=>['tipo.name' => SORT_ASC],
+            'desc'=>['tipo.name'=> SORT_DESC] ,
+        ];
 
         $this->load($params);
 
@@ -64,10 +90,13 @@ class MedicamentoSearch extends Medicamento
             'proveedor_id' => $this->proveedor_id,
             'tipo_id' => $this->tipo_id,
             'fecha_registro' => $this->fecha_registro,
+            'medicamento.activo' => $this->activo,
         ]);
 
         $query->andFilterWhere(['like', 'codigo', $this->codigo])
-            ->andFilterWhere(['like', 'nombre', $this->nombre])
+            ->andFilterWhere(['like', 'medicamento.nombre', $this->nombre])
+            ->andFilterWhere(['like', 'tipo_medicamento.nombre', $this->nombreTipo])
+            ->andFilterWhere(['like', 'profile.name', $this->nombreProveedor])
             ->andFilterWhere(['like', 'indicacion', $this->indicacion])
             ->andFilterWhere(['like', 'contraindicacion', $this->contraindicacion])
             ->andFilterWhere(['like', 'observacion', $this->observacion]);

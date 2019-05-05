@@ -27,6 +27,24 @@ use yii\widgets\ActiveForm;
 
                 <?= $form->field($model, 'descripcion')->textarea(['rows' => 6]) ?>
 
+                <?php
+                    if($model->isNewRecord)
+                    {
+                        $model->activo = true;
+                    }
+                    echo $form->field($model, 'activo')->widget(\kartik\widgets\SwitchInput::className(),[
+                        'bsVersion' => '3.x',
+                        'inlineLabel'=>false,
+                        'pluginOptions'=>[
+                            'size'=>'mini',
+                            'onText'=>'Activo',
+                            'offText'=>'Inactivo',
+                            'onColor'=>'success',
+                            'offColor'=>'danger',
+                        ],
+                    ]);
+                ?>
+
                 <div class="form-group">
                     <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
                 </div>

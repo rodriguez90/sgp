@@ -45,6 +45,7 @@ use yii\widgets\ActiveForm;
                     <div class="col-lg-4">
                         <?= $form->field($model, 'tipo_id')->widget(\kartik\select2\Select2::classname(), [
                             'data' =>  \yii\helpers\ArrayHelper::map(\app\models\TipoMedicamento::find()
+                                ->where(['activo'=>1    ])
                                 ->asArray()
                                 ->all(),'id','nombre'),
                             'language' => 'es',
@@ -73,6 +74,34 @@ use yii\widgets\ActiveForm;
                         <?= $form->field($model, 'stock')->textInput() ?>
 
                     </div>
+
+                    <div class="col-lg-4">
+
+                        <?php
+                        if($model->isNewRecord)
+                        {
+                            $model->activo = true;
+                        }
+                        echo $form->field($model, 'activo')->widget(\kartik\widgets\SwitchInput::className(),[
+                            'bsVersion' => '3.x',
+                            'inlineLabel'=>false,
+                            'pluginOptions'=>[
+                                'size'=>'mini',
+                                'onText'=>'Activo',
+                                'offText'=>'Inactivo',
+                                'onColor'=>'success',
+                                'offColor'=>'danger',
+                            ],
+                        ]);
+                        ?>
+
+                        <?php echo $form->field($model, "imagen")->fileInput([
+                            'multiple' => false,
+                            'required'=> false,
+                            'value' => $model->imagen
+                        ]); ?>
+                    </div>
+
                 </div>
 
                 <div class="row" >

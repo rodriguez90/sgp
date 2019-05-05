@@ -27,22 +27,52 @@ $this->params['breadcrumbs'][] = $this->title;
                 </p>
             </div>
             <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="medicamento-item" style="margin: 0px !important;">
+                            <div class="medicamento-image"><img width="255" height="155" src="<?php echo \yii\helpers\Url::toRoute($model->imagen == null || $model->imagen == '' ? 'medicamento-images/medicamento.jpg'  : $model->imagen); ?>"></div>
+                            <div class="card-footer">
+                                <div class="medicamento-nombre"><?php echo $model->nombre; ?></div>
+                                <div class="medicamento-codigo"><?php echo $model->codigo; ?></div>
+                                <div class="cart-action">
+                                    <label> Stock: <?php echo $model->stock ?> </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                <?= DetailView::widget([
-                    'model' => $model,
-                    'attributes' => [
-                        'id',
-                        'codigo',
-                        'nombre',
-                        'indicacion:ntext',
-                        'contraindicacion:ntext',
-                        'observacion:ntext',
-                        'stock',
-                        'proveedor_id',
-                        'tipo_id',
-                        'fecha_registro',
-                    ],
-                ]) ?>
+                    <div class="col-lg-8">
+                        <?= DetailView::widget([
+                            'model' => $model,
+                            'attributes' => [
+                                'id',
+                                'codigo',
+                                'nombre',
+                                [
+                                    'attribute'=>'activo',
+                                    'format'=> 'raw',
+                                    'value'=>  Html::label($model->activo ? 'Activo': 'Inactivo', null, ['class'=> $model->activo ? 'text-green': 'text-red'])
+                                ],
+                                'indicacion:ntext',
+                                'contraindicacion:ntext',
+                                'observacion:ntext',
+                                'stock',
+                                [
+                                    'attribute' => 'nombreProveedor',
+                                    'label'=> 'Proveedor'
+                                ],
+                                [
+                                    'attribute' => 'nombreTipo',
+                                    'label'=> 'Tipo'
+                                ],
+                                'fecha_registro:date',
+                            ],
+                            'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
+                        ]) ?>
+                    </div>
+
+                </div>
+
             </div>
         </div>
     </div>

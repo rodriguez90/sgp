@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+use Da\User\Model\Profile;
 use Da\User\Model\User;
 
 use Yii;
@@ -18,6 +19,8 @@ use Yii;
  * @property int $proveedor_id Proveedor
  * @property int $tipo_id Tipo
  * @property string $fecha_registro
+ * @property int $activo Activo
+ * @property string $imagen Imagen
  *
  * @property User $proveedor
  * @property TipoMedicamento $tipo
@@ -25,6 +28,12 @@ use Yii;
  */
 class Medicamento extends \yii\db\ActiveRecord
 {
+
+    const ESTADOS_LABEL = [
+        1 => 'Activo',
+        2 => 'Inactivo',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -41,11 +50,12 @@ class Medicamento extends \yii\db\ActiveRecord
         return [
             [['codigo', 'nombre', 'indicacion', 'contraindicacion', 'stock', 'proveedor_id', 'tipo_id'], 'required'],
             [['indicacion', 'contraindicacion', 'observacion'], 'string'],
-            [['proveedor_id', 'tipo_id'], 'integer'],
+            [['proveedor_id', 'tipo_id', 'activo'], 'integer'],
             [['fecha_registro'], 'safe'],
             [['stock'], 'number'],
             [['codigo', 'nombre'], 'string', 'max' => 255],
             [['codigo'], 'unique'],
+            [['imagen'], 'file', 'extensions' => 'png, jpg'],
             [['proveedor_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['proveedor_id' => 'id']],
             [['tipo_id'], 'exist', 'skipOnError' => true, 'targetClass' => TipoMedicamento::className(), 'targetAttribute' => ['tipo_id' => 'id']],
         ];
@@ -67,6 +77,8 @@ class Medicamento extends \yii\db\ActiveRecord
             'proveedor_id' => 'Proveedor',
             'tipo_id' => 'Tipo',
             'fecha_registro' => 'Fecha Registro',
+            'activo' => 'Activo',
+            'imagen' => 'Imagen'
         ];
     }
 
@@ -78,12 +90,28 @@ class Medicamento extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'proveedor_id']);
     }
 
+    private $_nombreProveedor = '';
+
+    public function getNombreProveedor() {
+        $this->_nombreProveedor = Profile::findOne(['user_id'=>$this->proveedor_id])->name;
+
+        return $this->_nombreProveedor;
+    }
+
     /**
      * @return \yii\db\ActiveQuery
      */
     public function getTipo()
     {
         return $this->hasOne(TipoMedicamento::className(), ['id' => 'tipo_id']);
+    }
+
+    private $_nombreTipo = '';
+
+    public function getNombreTipo() {
+        $this->_nombreTipo = $this->tipo->nombre;
+
+        return $this->_nombreTipo;
     }
 
     /**

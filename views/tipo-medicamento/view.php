@@ -9,6 +9,7 @@ use yii\widgets\DetailView;
 $this->title = $model->nombre;
 $this->params['breadcrumbs'][] = ['label' => 'Tipos de Medicamentos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="row">
     <div class="col-md-12">
@@ -33,6 +34,11 @@ $this->params['breadcrumbs'][] = $this->title;
                     'attributes' => [
                         'id',
                         'nombre',
+                        [
+                            'attribute'=>'activo',
+                            'format'=> 'raw',
+                            'value'=>  Html::label($model->activo ? 'Activo': 'Inactivo' , null, ['class'=> $model->activo ? 'text-green': 'text-red'])
+                        ],
                         'descripcion:ntext',
                     ],
                 ]) ?>

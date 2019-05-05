@@ -11,8 +11,6 @@ use Yii;
  * @property int $cantidad Cantidad
  * @property int $pedido_id Pedido
  * @property int $medicamento_id Medicamento
- * @property string $fecha_registro
- * @property string $fecha_entrega
  *
  * @property Medicamento $medicamento
  * @property Pedido $pedido
@@ -35,7 +33,6 @@ class PedidoDetalle extends \yii\db\ActiveRecord
         return [
             [['cantidad', 'pedido_id', 'medicamento_id'], 'required'],
             [['cantidad', 'pedido_id', 'medicamento_id'], 'integer'],
-            [['fecha_registro', 'fecha_entrega'], 'safe'],
             [['medicamento_id'], 'exist', 'skipOnError' => true, 'targetClass' => Medicamento::className(), 'targetAttribute' => ['medicamento_id' => 'id']],
             [['pedido_id'], 'exist', 'skipOnError' => true, 'targetClass' => Pedido::className(), 'targetAttribute' => ['pedido_id' => 'id']],
         ];
@@ -51,8 +48,6 @@ class PedidoDetalle extends \yii\db\ActiveRecord
             'cantidad' => 'Cantidad',
             'pedido_id' => 'Pedido',
             'medicamento_id' => 'Medicamento',
-            'fecha_registro' => 'Fecha Registro',
-            'fecha_entrega' => 'Fecha Entrega',
         ];
     }
 

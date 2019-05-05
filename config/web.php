@@ -32,10 +32,17 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            // send all mails to a file by default. You have to set
-            // 'useFileTransport' to false and configure a transport
-            // for the mailer to send real emails.
-            'useFileTransport' => true,
+            'viewPath' => '@app/mail',
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => '127.0.0.1',
+                'port' => '25',
+//				'host' => '',
+//                'username' => '',
+//                'password' => '',
+//                'port' => '587',
+//                'encryption' => 'tls',
+            ],
         ],
         'log' => [
             'traceLevel' => YII_DEBUG ? 3 : 0,
@@ -70,35 +77,32 @@ $config = [
         'as AccessBehavior' => [
             'class' => '\app\components\AccessBehavior'
         ],
-//            'assetManager' => [
-//                'bundles' => [
-//                    'dosamigos\google\maps\MapAsset' => [
-//                        'options' => [
-//                            'key' => 'this_is_my_key',
-////                            235137657038-qo4i4essgutmqe7ngk073s2hm67che6b.apps.googleusercontent.com
-////                            ID de cliente:
-////235137657038-qo4i4essgutmqe7ngk073s2hm67che6b.apps.googleusercontent.com
-////   Secreto de cliente:
-////RDfTwb5xRT6Y6csECBn62Hq2
-//                            'language' => 'id',
-//                            'version' => '3.1.18'
-//                        ]
-//                    ]
-//                ]
-//            ],
-//        ],
+        'view' => [
+            'theme' => [
+                'pathMap' => [
+                    '@Da/User/resources/views' => '@app/views/user'
+                ]
+            ]
+        ]
     ],
     'modules' => [
        'user' => [
-            'class' => Da\User\Module::class,           
-            'administrators'=>['root'],
-            'administratorPermissionName'=>'Administrador',
-            'enableRegistration'=>true,
-            'enableEmailConfirmation'=>false,
-            'enableFlashMessages'=>false,
-            'allowUnconfirmedEmailLogin'=>true,
-            'allowAccountDelete'=>false,
-            'generatePasswords'=>false,
+           'class' => Da\User\Module::class,
+           'viewPath' => '@Da/User/resources/views',
+           'classMap' => [
+               'RegistrationForm' => 'app\forms\RegistrationForm',
+           ],
+           'controllerMap' => [
+               'registration' => 'app\controllers\RegistrationController'
+           ],
+           'administrators'=>['root'],
+           'administratorPermissionName'=>'Administrador',
+           'enableRegistration'=>true,
+           'enableEmailConfirmation'=>false,
+           'enableFlashMessages'=>false,
+           'allowUnconfirmedEmailLogin'=>true,
+           'allowAccountDelete'=>false,
+           'generatePasswords'=>false,
         ],
     ],
     'params' => $params,

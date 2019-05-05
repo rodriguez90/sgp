@@ -30,12 +30,29 @@ $this->params['breadcrumbs'][] = $this->title;
                     'filterModel' => $searchModel,
                     'columns' => [
                         'id',
-                        'codigo',
-                        'estado',
+                        [
+                            'attribute'=>'estado',
+                            'format'=> 'raw',
+                            'value'=>  function($model) {
+                                return Html::label( \app\models\Pedido::ESTADOS_LABEL[$model->estado], null, ['class'=>  'text-green']);
+                            },
+                            'filter' => \app\models\Pedido::ESTADOS_LABEL
+                        ],
                         'observacion:ntext',
-                        'usuario_id',
-                        //'fecha_registro',
-                        //'fecha_entrega',
+                        [
+                            'attribute' =>'usuario',
+                            'value' => function(\app\models\Pedido $model){
+                                return $model->getNombreUsuario();
+                            }
+                        ],
+                        'fecha_registro:datetime',
+                        [
+                            'attribute'=>'fecha_entrega',
+                            'format'=> 'datetime',
+                            'value'=> function($model) {
+                                return $model->estado === \app\models\Pedido::ENTREGADO ? date('d-m-Y H:i', $model->fecha_entrega) : null;
+                            }
+                        ],
 
                         ['class' => 'yii\grid\ActionColumn'],
                     ],

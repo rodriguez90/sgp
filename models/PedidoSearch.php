@@ -12,6 +12,7 @@ use app\models\Pedido;
  */
 class PedidoSearch extends Pedido
 {
+    public $usuario;
     /**
      * {@inheritdoc}
      */
@@ -19,7 +20,7 @@ class PedidoSearch extends Pedido
     {
         return [
             [['id', 'estado', 'usuario_id'], 'integer'],
-            [['codigo', 'observacion', 'fecha_registro', 'fecha_entrega'], 'safe'],
+            [['observacion', 'fecha_registro', 'fecha_entrega', 'usuario'], 'safe'],
         ];
     }
 
@@ -45,9 +46,23 @@ class PedidoSearch extends Pedido
 
         // add conditions that should always apply here
 
+        $query->joinWith(['usuario']);
+
+        $query->orderBy(['id' => SORT_DESC]);
+
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => [
+                'pageSize' => 5
+            ]
         ]);
+
+
+
+        $dataProvider->sort->attributes['usuario'] = [
+            'asc'=>['user.name' => SORT_ASC],
+            'desc'=>['user.name'=> SORT_DESC] ,
+        ];
 
         $this->load($params);
 
@@ -66,8 +81,8 @@ class PedidoSearch extends Pedido
             'fecha_entrega' => $this->fecha_entrega,
         ]);
 
-        $query->andFilterWhere(['like', 'codigo', $this->codigo])
-            ->andFilterWhere(['like', 'observacion', $this->observacion]);
+        $query->andFilterWhere(['like', 'observacion', $this->observacion]);
+        $query->andFilterWhere(['like', 'user.username', $this->usuario]);
 
         return $dataProvider;
     }

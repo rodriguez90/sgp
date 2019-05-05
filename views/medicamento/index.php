@@ -34,13 +34,29 @@ $this->params['breadcrumbs'][] = $this->title;
 //                        'indicacion:ntext',
 //                        'contraindicacion:ntext',
                         //'observacion:ntext',
+                        [
+                            'attribute'=>'activo',
+                            'format'=> 'raw',
+                            'value'=>function(\app\models\Medicamento $modelo) {
+                                $html = Html::label($modelo->activo ? 'Activo': 'Inactivo', null, ['class'=>$modelo->activo ? 'text-green': 'text-red']);
+                                return $html;
+                            },
+                            'filter' => \app\models\Medicamento::ESTADOS_LABEL
+                        ],
                         'stock',
-                        'proveedor_id',
-                        'tipo_id',
+                        [
+                                'attribute' => 'nombreProveedor',
+                                'label'=> 'Proveedor'
+                        ],
+                        [
+                            'attribute' => 'nombreTipo',
+                            'label'=> 'Tipo'
+                        ],
                         //'fecha_registro',
 
                         ['class' => 'yii\grid\ActionColumn'],
                     ],
+                    'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                 ]); ?>
                 <?php Pjax::end(); ?>
             </div>

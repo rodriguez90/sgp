@@ -9,7 +9,6 @@ use Yii;
  * This is the model class for table "pedido".
  *
  * @property int $id No.
- * @property string $codigo Código
  * @property int $estado Estado
  * @property string $observacion Observación
  * @property int $usuario_id Usuario
@@ -25,12 +24,14 @@ class Pedido extends \yii\db\ActiveRecord
     const ACEPTADO = 2;
     const RECHAZADO = 3;
     const PENDIENTE = 4;
-    const ENTREGADO = 4;
+    const ENTREGADO = 5;
 
     const ESTADOS_CHOICES = [
-        ['id' => 1, 'name' => 'Rural'],
-        ['id' => 2, 'name' => 'Norte'],
-        ['id' => 3, 'name' => 'Sur']
+        ['id' => 1, 'name' => 'SOLICITADO'],
+        ['id' => 2, 'name' => 'ACEPTADO'],
+        ['id' => 3, 'name' => 'RECHAZADO'],
+        ['id' => 4, 'name' => 'PENDIENTE'],
+        ['id' => 5, 'name' => 'ENTREGADO'],
     ];
 
     const ESTADOS_LABEL = [
@@ -55,12 +56,10 @@ class Pedido extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['codigo', 'estado', 'usuario_id'], 'required'],
+            [['estado', 'usuario_id'], 'required'],
             [['estado', 'usuario_id'], 'integer'],
             [['observacion'], 'string'],
             [['fecha_registro', 'fecha_entrega'], 'safe'],
-            [['codigo'], 'string', 'max' => 255],
-            [['codigo'], 'unique'],
             [['usuario_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['usuario_id' => 'id']],
         ];
     }
@@ -72,7 +71,6 @@ class Pedido extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'No.',
-            'codigo' => 'Código',
             'estado' => 'Estado',
             'observacion' => 'Observación',
             'usuario_id' => 'Usuario',
@@ -87,6 +85,12 @@ class Pedido extends \yii\db\ActiveRecord
     public function getUsuario()
     {
         return $this->hasOne(User::className(), ['id' => 'usuario_id']);
+    }
+
+    private $_nombreUsuario = '';
+
+    public function getNombreUsuario() {
+        return $this->usuario->username;
     }
 
     /**

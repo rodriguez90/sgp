@@ -38,6 +38,8 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'fecha_registro') ?>
 
+    <?php // echo $form->field($model, 'activo') ?>
+
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reset', ['class' => 'btn btn-default']) ?>

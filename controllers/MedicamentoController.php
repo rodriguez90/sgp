@@ -8,6 +8,11 @@ use app\models\MedicamentoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use Da\User\Filter\AccessRuleFilter;
+use yii\filters\AccessControl;
+use yii\web\Response;
+use yii\web\UploadedFile;
+
 
 /**
  * MedicamentoController implements the CRUD actions for Medicamento model.
@@ -24,8 +29,47 @@ class MedicamentoController extends Controller
                 'class' => VerbFilter::className(),
                 'actions' => [
                     'delete' => ['POST'],
+                    'stock' => ['GET']
                 ],
             ],
+            'access' => [
+                'class' => AccessControl::className(),
+                'ruleConfig' => [
+                    'class' => AccessRuleFilter::class,
+                ],
+                'rules' => [
+                    [
+                        'actions' => ['index'],
+                        'allow' => true,
+                        'roles' => ['medicamento/index'],
+                    ],
+                    [
+                        'actions' => ['create', 'stock'],
+                        'allow' => true,
+                        'roles' => ['medicamento/create'],
+                    ],
+                    [
+                        'actions' => ['update'],
+                        'allow' => true,
+                        'roles' => ['medicamento/update'],
+                    ],
+                    [
+                        'actions' => ['delete'],
+                        'allow' => true,
+                        'roles' => ['medicamento/delete'],
+                    ],
+                    [
+                        'actions' => ['list'],
+                        'allow' => true,
+                        'roles' => ['medicamento/list'],
+                    ],
+                    [
+                        'actions' => ['view'],
+                        'allow' => true,
+                        'roles' => ['medicamento/view'],
+                    ],
+                ],
+            ]
         ];
     }
 
@@ -66,8 +110,24 @@ class MedicamentoController extends Controller
     {
         $model = new Medicamento();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->request->isPost)
+        {
+            $ficheros = UploadedFile::getInstances($model, 'imagen');
+
+            if ($model->load(Yii::$app->request->post())) {
+
+                if($model->save())
+                {
+                    if(count($ficheros)) {
+                        $nombreImagen = 'medicamento-images/' . $ficheros[0]->baseName . '_'. $model->id . '.' . $ficheros[0]->extension;
+                        if($ficheros[0]->saveAs($nombreImagen)) {
+                            $model->imagen = $nombreImagen;
+                            $model->save();
+                        }
+                    }
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
         return $this->render('create', [
@@ -86,9 +146,21 @@ class MedicamentoController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if(Yii::$app->request->isPost)
+        {
+            $ficheros = UploadedFile::getInstances($model, 'imagen');
+            if(count($ficheros)) {
+                $nombreImagen = 'medicamento-images/' . $ficheros[0]->baseName . $model->id . '.' . $ficheros[0]->extension;
+                if($ficheros[0]->saveAs($nombreImagen)) {
+                    $model->imagen = $nombreImagen;
+                }
+            }
+
+            if ($model->load(Yii::$app->request->post()) && $model->save()) {
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
         }
+
 
         return $this->render('update', [
             'model' => $model,
@@ -123,5 +195,57 @@ class MedicamentoController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+    /*
+     * Retorna el stock del medicamento
+     */
+    public function actionStock() {
+        Yii::$app->response->format = Response::FORMAT_JSON;
+
+        $id = Yii::$app->request->get('id');
+        $cantidad = Yii::$app->request->get('cantidad');
+        $response = array();
+        $response['success'] = true;
+        $response['data'] = [];
+        $response['msg'] = '';
+        $response['msg_dev'] = '';
+
+        if(!is_null($id) && !is_null($cantidad))
+        {
+            try
+            {
+                 $medicamento = Medicamento::findOne(['id'=>$id]);
+                $medicamentoData = [
+                    'id' => $medicamento->id,
+                    'nombre' => $medicamento->nombre,
+                    'codigo' => $medicamento->codigo,
+                    'stock' => $medicamento->stock,
+                    'proveedor' => $medicamento->getNombreProveedor(),
+                    'cantidad' => $cantidad,
+                ];
+
+                 if($medicamento && $medicamento->stock === 0 ) {
+                     $response['success'] = false;
+                     $response['msg'] = 'El medicamento esta agotado.';
+                 }
+                 elseif ($medicamento && $medicamento->stock < $cantidad) {
+                     $response['success'] = false;
+                     $response['msg'] = 'La cantidad solicidata es mayor que la q tenemos en Stock.';
+                 }
+                 else {
+                     $response['data'] = $medicamentoData;
+                 }
+            }
+            catch ( \Exception $e)
+            {
+                $response['success'] = false;
+                $response['msg'] = "Ah ocurrido un error al recuperar el stock del medicamento.";
+                $response['msg_dev'] = $e->getMessage();
+                $response['data'] = [];
+            }
+        }
+
+        return $response;
     }
 }

@@ -29,6 +29,15 @@ $this->params['breadcrumbs'][] = $this->title;
                     'columns' => [
                         'id',
                         'nombre',
+                        [
+                            'attribute'=>'activo',
+                            'format'=> 'raw',
+                            'value'=>function(\app\models\TipoMedicamento $modelo) {
+                                $html = Html::label($modelo->activo ? 'Activo': 'Inactivo' , null, ['class'=>$modelo->activo ? 'text-green': 'text-red']);
+                                return $html;
+                            },
+                            'filter' => \app\models\TipoMedicamento::ESTADOS_LABEL
+                        ],
                         'descripcion:ntext',
 
                         ['class' => 'yii\grid\ActionColumn'],

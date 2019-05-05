@@ -2,6 +2,9 @@
 
 namespace app\controllers;
 
+use app\models\Medicamento;
+use app\models\Pedido;
+use app\models\PedidoSearch;
 use Da\User\Filter\AccessRuleFilter;
 use Yii;
 use yii\filters\AccessControl;
@@ -69,7 +72,24 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        return $this->render('index', []);
+        $totlPedidos = Pedido::find()->count();
+        $totalPedidosPendientes = Pedido::find()->where(['estado'=>Pedido::PENDIENTE])->count();
+        $totalProveedores = \Da\User\Model\Profile::find()
+            ->innerJoin('auth_assignment', 'profile.user_id=auth_assignment.user_id and auth_assignment.item_name="Proveedor"')
+            ->count();
+        $totalMedicamentos = Medicamento::find()->count();
+
+        $searchModel = new PedidoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'totalPedidos'=>$totlPedidos,
+            'totalPedidosPendientes'=>$totalPedidosPendientes,
+            'totalProveedores'=>$totalProveedores,
+            'totalMedicamentos'=>$totalMedicamentos,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**
