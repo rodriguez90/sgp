@@ -71,9 +71,9 @@ class MedicamentoSearch extends Medicamento
         $query->joinWith(['proveedor', 'tipo'])
             ->innerJoin('profile', 'user.id = profile.user_id');
 
-        $query->orderBy([
-            'medicamento.nombre'=>SORT_ASC,
-        ]);
+//        $query->orderBy([
+//            'medicamento.nombre'=>SORT_ASC,
+//        ]);
 
         $dataProvider->sort->attributes['nombreProveedor'] = [
             'asc'=>['profile.name' => SORT_ASC],
@@ -142,9 +142,9 @@ class MedicamentoSearch extends Medicamento
             ->leftJoin('pedido', 'pedido.id=pedido_detalle.pedido_id')
             ->leftJoin(['totales'=>$subQuery], 'totales.medicamento_id=medicamento.id');
 
-        $query->orderBy([
-            'medicamento.nombre'=>SORT_ASC,
-        ]);
+//        $query->orderBy([
+//            'medicamento.nombre'=>SORT_ASC,
+//        ]);
 
         $dataProvider->sort->attributes['nombreProveedor'] = [
             'asc'=>['profile.name' => SORT_ASC],
