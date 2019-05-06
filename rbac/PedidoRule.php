@@ -7,12 +7,14 @@
  */
 
 namespace app\rbac;
+use app\models\Pedido;
+use app\models\PedidoDetalle;
 use yii\rbac\Item;
 use yii\rbac\Rule;
 use app\models\Payment;
 
 
-class PaymentRule extends Rule
+class PedidoRule extends Rule
 {
     public $name = 'isCollector';
 
@@ -20,7 +22,7 @@ class PaymentRule extends Rule
     {
         $result = false;
         // TODO: Implement execute() method.
-        var_dump('in rule');
+//        var_dump('in rule');
 //        var_dump($user);
 //        var_dump($params);
 
@@ -29,13 +31,13 @@ class PaymentRule extends Rule
         {
                 $result = true;
         }
-		else if( isset($params['payments']))
+		else if( isset($params['pedidos']))
         {
             $result = true;
-            foreach ($params['payments'] as $paymentID )
+            foreach ($params['pedidos'] as $pedidoID )
             {
-                $payment = Payment::findOne($paymentID);
-                if($payment->collector_id !== $user)
+                $pedido = Pedido::findOne($pedidoID);
+                if($pedido->usuario !== $user)
                 {
                     $result = false;
                     break;

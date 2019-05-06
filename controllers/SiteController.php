@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Medicamento;
+use app\models\MedicamentoSearch;
 use app\models\Pedido;
 use app\models\PedidoSearch;
 use Da\User\Filter\AccessRuleFilter;
@@ -29,7 +30,7 @@ class SiteController extends Controller
 //                'only' => ['error'],
                 'rules' => [
                     [
-                        'actions' => ['index', 'logout'],
+                        'actions' => ['index', 'logout', 'estadisticas'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],                    
@@ -87,6 +88,17 @@ class SiteController extends Controller
             'totalPedidosPendientes'=>$totalPedidosPendientes,
             'totalProveedores'=>$totalProveedores,
             'totalMedicamentos'=>$totalMedicamentos,
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionEstadisticas()
+    {
+        $searchModel = new MedicamentoSearch();
+        $dataProvider = $searchModel->searchEstadistica(Yii::$app->request->queryParams);
+
+        return $this->render('estadistica', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);

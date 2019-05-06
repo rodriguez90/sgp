@@ -121,4 +121,30 @@ class Medicamento extends \yii\db\ActiveRecord
     {
         return $this->hasMany(PedidoDetalle::className(), ['medicamento_id' => 'id']);
     }
+
+    private $_cantidadPedidos;
+    public function getCantidadPedidos() {
+
+        $count = Pedido::find()
+            ->innerJoin('pedido_detalle', 'pedido_detalle.pedido_id=pedido.id')
+            ->innerJoin('medicamento', 'medicamento.id=pedido_detalle.medicamento_id')
+            ->where(['pedido_detalle.medicamento_id'=>$this->id])
+            ->count();
+
+        return $count;
+    }
+
+    private $_total;
+    public function getTotal() {
+
+        $total = Pedido::find()
+            ->innerJoin('pedido_detalle', 'pedido_detalle.pedido_id=pedido.id')
+            ->innerJoin('medicamento', 'medicamento.id=pedido_detalle.medicamento_id')
+            ->where(['pedido_detalle.medicamento_id'=>$this->id])
+            ->sum('pedido_detalle.cantidad');
+
+        $total = $total == null ? 0 : $total;
+
+        return $total;
+    }
 }

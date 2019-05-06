@@ -35,7 +35,7 @@ if(Yii::$app->authManager->checkAccess($user->getId(),'pedido/index') ||
 if(Yii::$app->authManager->checkAccess($user->getId(),'pedido/index') ||
     $identity->getIsAdmin())
 {
-    $items[]=['label' => 'Estadísticas', 'icon' => 'area-chart', 'url' => ['/pedido/index']];
+    $items[]=['label' => 'Estadísticas', 'icon' => 'area-chart', 'url' => ['/site/estadisticas']];
 }
 
 if($identity->getIsAdmin())

@@ -7,16 +7,13 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\models\MedicamentoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Medicamentos';
+$this->title = 'Estadísticas';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header">
-                <p>
-                    <?= Html::a('Nuevo Medicamento', ['create'], ['class' => 'btn btn-success']) ?>
-                </p>
             </div>
             <div class="box-body">
 
@@ -45,16 +42,26 @@ $this->params['breadcrumbs'][] = $this->title;
                         ],
                         'stock',
                         [
-                                'attribute' => 'nombreProveedor',
-                                'label'=> 'Proveedor'
+                            'attribute' => 'nombreProveedor',
+                            'label'=> 'Proveedor'
                         ],
                         [
                             'attribute' => 'nombreTipo',
                             'label'=> 'Tipo'
                         ],
                         //'fecha_registro',
-
-                        ['class' => 'yii\grid\ActionColumn'],
+                        [
+                            'attribute' => 'cantidadPedidos',
+                            'label' => 'Demanda'
+                        ],
+                        [
+                            'attribute' => 'total',
+                            'label' => 'Total'
+                        ],
+                        [
+                            'class' => 'yii\grid\ActionColumn',
+                            'template' => '{view}'
+                        ],
                     ],
                     'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                 ]); ?>
