@@ -42,11 +42,24 @@ class PedidoSearch extends Pedido
      */
     public function search($params)
     {
+
+        $user = Yii::$app->user;
+
+        $identity = $user->identity;
+
         $query = Pedido::find();
 
         // add conditions that should always apply here
 
-        $query->joinWith(['usuario']);
+        $query->joinWith(['usuario', 'pedidoDetalles']);
+
+
+        if(!$identity->getIsAdmin())
+        {
+            $query->innerJoin('medicamento', 'medicamento.id=pedido_detalle.medicamento_id');
+            $query->where(['pedido.usuario_id'=>$user->id])
+                ->orWhere(['medicamento.proveedor_id'=>$user->id]);
+        }
 
         $query->orderBy(['id' => SORT_DESC]);
 

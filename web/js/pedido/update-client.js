@@ -81,6 +81,9 @@ var handleDataTable = function() {
                                 .row(row)
                                 .remove()
                                 .draw();
+
+                            $('#btnEmpty').attr("disabled", table.rows().count() === 0);
+                            $('#btnSave').attr("disabled", table.rows().count() === 0);
                         }
                     },
                     cancel: {
@@ -96,6 +99,98 @@ var init = function(){
 
     handleDataTable();
     // recuperar los medicamentos del pedido
+
+    $('#btnEmpty').attr("disabled", true);
+    $('#btnSave').attr("disabled", true);
+
+    $('#w1').submit(function (event) {
+        var params = $('#w1').serializeObject();
+        console.log('pedidoDetalles', params);
+
+        var table = $('#data-table').DataTable();
+
+        params['PedidoForm[pedidoDetalles]'] = [];
+
+        if(table
+            .rows()
+            .count()  == 0) {
+
+            $.alert({
+                title: 'Advertencia!',
+                content: 'Debe seleccionar los medicamentos del pedido.',
+                buttons: {
+                    confirm: {
+                        text:'Aceptar',
+                        btnClass: 'btn-info',
+                    },
+                }
+            });
+
+            return false;
+        }
+
+        var detalles = [];
+        table
+            .rows()
+            .data()
+            .each( function ( value, index ) {
+                detalles.push(value);
+
+            });
+
+        $('#pedidoform-pedidodetalles').val(JSON.stringify(detalles));
+
+        console.log('pedidoDetalles', detalles);
+
+        return true;
+    });
+
+    $.ajax({
+        // async:false,
+        url: homeUrl + "pedido/detalles",
+        type: "get",
+        dataType: "json",
+        data: {id: pedidoId} ,
+//                            contentType: "application/json; charset=utf-8",
+        beforeSend:function () {
+
+        },
+        success: function (response) {
+
+            if(response.success)
+            {
+                var table = $('#data-table').DataTable();
+                table.rows.add(response.data).draw();
+            }
+            else
+            {
+                $.alert(
+                    {
+                        title:'Advertencia!',
+                        content:response.msg,
+                        buttons: {
+                            confirm: {
+                                text:'Aceptar',
+                            }
+                        }
+                    }
+                );
+            }
+        },
+        error: function(data) {
+            $.alert(
+                {
+                    title:'Advertencia!',
+                    content:'Ah ocurrido un error al recuperar los medicamentos del pedido.',
+                    buttons: {
+                        confirm: {
+                            text:'Aceptar',
+                        }
+                    }
+                }
+            );
+        },
+    });
 };
 
 var agregarMedicamento = function(medicamentoId) {
@@ -106,8 +201,7 @@ var agregarMedicamento = function(medicamentoId) {
     var table = $('#data-table').DataTable();
 
     var row  = table.row(function (idx, data, node) {
-        return data.id === medicamentoId
-
+        return parseInt(data.id) === parseInt(medicamentoId)
     });
 
     if(row.length > 0)
@@ -134,7 +228,7 @@ var agregarMedicamento = function(medicamentoId) {
 
 
                 var row  = table.row(function (idx, data, node) {
-                    return data.id === medicamento.id
+                    return parseInt(data.id) === parseInt(medicamentoId)
 
                 });
 
@@ -147,6 +241,9 @@ var agregarMedicamento = function(medicamentoId) {
                 else {
                     table.row.add(medicamento).draw();
                 }
+
+                $('#btnEmpty').attr("disabled", table.rows().count() === 0);
+                $('#btnSave').attr("disabled", table.rows().count() === 0);
             }
             else
             {
@@ -193,6 +290,9 @@ var limpiarPedido = function() {
                 action: function () {
                     var table = $('#data-table').DataTable();
                     table.clear().draw();
+
+                    $('#btnEmpty').attr("disabled", true);
+                    $('#btnSave').attr("disabled", true);
                 }
             },
             cancel: {

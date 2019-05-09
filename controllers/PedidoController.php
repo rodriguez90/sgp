@@ -47,7 +47,7 @@ class PedidoController extends Controller
                         'roles' => ['pedido/index'],
                     ],
                     [
-                        'actions' => ['create', 'eliminar-detalle'],
+                        'actions' => ['create', 'eliminar-detalle', 'detalles'],
                         'allow' => true,
                         'roles' => ['pedido/create'],
                     ],
@@ -157,22 +157,58 @@ class PedidoController extends Controller
 //
 //        }
 
-        $model = new PedidoForm(['id'=>$id]);
+        $user = Yii::$app->user;
 
-        if (Yii::$app->request->isPost) {
+        $identity = $user->identity;
 
-            $model->setAttributes(Yii::$app->request->post());
+        if(Yii::$app->authManager->getAssignment('Proveedor',$user->getId()) || $identity->getIsAdmin()) {
+            $model = new PedidoForm(['id'=>$id]);
 
-            if($model->save())
-            {
-                return $this->redirect(['view', 'id' => $model->pedido->id]);
+            if (Yii::$app->request->isPost) {
+
+                $model->setAttributes(Yii::$app->request->post());
+
+                if($model->save())
+                {
+                    return $this->redirect(['view', 'id' => $model->pedido->id]);
+                }
+
             }
 
+            return $this->render('update', [
+                'model' => $model,
+            ]);
         }
+        elseif (Yii::$app->authManager->getAssignment('Cliente',$user->getId())) {
+            $model = new PedidoForm(['id'=>$id]);
 
-        return $this->render('update', [
-            'model' => $model,
-        ]);
+            if (Yii::$app->request->isPost) {
+
+                $model->setAttributes(Yii::$app->request->post());
+
+                if($model->save())
+                {
+                    return $this->redirect(['view', 'id' => $model->pedido->id]);
+                }
+
+            }
+
+            $query = Medicamento::find();
+
+            $searchModel = new MedicamentoSearch();
+            $medicamentosDataProvider = new ActiveDataProvider([
+                'query' => $query,
+                'pagination' => [
+                    'pageSize' => 3
+                ]
+            ]);
+
+            return $this->render('update_client', [
+                'model' => $model,
+                'searchModel' => $searchModel,
+                'medicamentosDataProvider' => $medicamentosDataProvider,
+            ]);
+        }
     }
 
     /**

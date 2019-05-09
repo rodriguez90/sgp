@@ -9,15 +9,21 @@ use yii\widgets\Pjax;
 
 $this->title = 'Pedidos';
 $this->params['breadcrumbs'][] = $this->title;
+
+$user = Yii::$app->user;
+$createPedido = false;
+if($user && Yii::$app->authManager->checkAccess($user->getId(),'pedido/create'))
+    $createPedido = true;
+
 ?>
 <div class="row">
     <div class="col-md-12">
         <div class="box box-info">
             <div class="box-header">
 
-                <p>
-                    <?= Html::a('Nuevo Pedido', ['create'], ['class' => 'btn btn-success']) ?>
-                </p>
+                <?php
+                if($createPedido)
+                    echo Html::a('Nuevo Pedido', ['create'], ['class' => 'btn btn-success']) ?>
             </div>
 
             <div class="box-body">

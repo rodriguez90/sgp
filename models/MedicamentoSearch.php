@@ -116,6 +116,10 @@ class MedicamentoSearch extends Medicamento
 
     public function searchEstadistica($params)
     {
+        $user = Yii::$app->user;
+
+        $identity = $user->identity;
+
         $subQuery = Medicamento::find()
             ->select([
                 'medicamento.id as medicamento_id',
@@ -141,6 +145,11 @@ class MedicamentoSearch extends Medicamento
             ->innerJoin('profile', 'user.id = profile.user_id')
             ->leftJoin('pedido', 'pedido.id=pedido_detalle.pedido_id')
             ->leftJoin(['totales'=>$subQuery], 'totales.medicamento_id=medicamento.id');
+
+//        if(!$identity->getIsAdmin())
+//        {
+//            $query->where(['medicamento.proveedor_id'=>$user->id]);
+//        }
 
 //        $query->orderBy([
 //            'medicamento.nombre'=>SORT_ASC,

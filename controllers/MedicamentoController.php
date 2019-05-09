@@ -44,7 +44,7 @@ class MedicamentoController extends Controller
                         'roles' => ['medicamento/index'],
                     ],
                     [
-                        'actions' => ['create', 'stock'],
+                        'actions' => ['create',],
                         'allow' => true,
                         'roles' => ['medicamento/create'],
                     ],
@@ -59,9 +59,9 @@ class MedicamentoController extends Controller
                         'roles' => ['medicamento/delete'],
                     ],
                     [
-                        'actions' => ['list'],
+                        'actions' => ['list', 'stock'],
                         'allow' => true,
-                        'roles' => ['medicamento/list'],
+                        'roles' => ['medicamento/index'],
                     ],
                     [
                         'actions' => ['view'],

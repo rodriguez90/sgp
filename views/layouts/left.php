@@ -38,6 +38,13 @@ if(Yii::$app->authManager->checkAccess($user->getId(),'pedido/index') ||
     $items[]=['label' => 'Estadísticas', 'icon' => 'area-chart', 'url' => ['/site/estadisticas']];
 }
 
+
+if(Yii::$app->authManager->checkAccess($user->getId(),'medicamento/index') ||
+    $identity->getIsAdmin())
+{
+    $items[]=['label' => 'Medicamentos', 'icon' => 'medkit', 'url' => ['/medicamento/index']];
+}
+
 if($identity->getIsAdmin())
 {
     if(Yii::$app->authManager->checkAccess($user->getId(),'tipo-medicamento/index') ||
@@ -46,11 +53,6 @@ if($identity->getIsAdmin())
         $administracion['items'][]=['label' => 'Tipo Medicamentos', 'icon' => 'bookmark', 'url' => ['/tipo-medicamento/index']];
     }
 
-    if(Yii::$app->authManager->checkAccess($user->getId(),'medicamento/index') ||
-        $identity->getIsAdmin())
-    {
-        $administracion['items'][]=['label' => 'Medicamentos', 'icon' => 'medkit', 'url' => ['/medicamento/index']];
-    }
 
     if(Yii::$app->authManager->getAssignment('Administrador',$user->getId()) ||
         ($identity != null && $identity->getIsAdmin()))
@@ -60,9 +62,6 @@ if($identity->getIsAdmin())
 
     $items[]= $administracion;
 }
-
-
-
 
 ?>
 <aside class="main-sidebar">

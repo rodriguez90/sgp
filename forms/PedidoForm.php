@@ -153,13 +153,24 @@ class PedidoForm extends Model
     public function setAttributes($data) {
 
         $this->pedido = $data['Pedido'];
+        $this->_pedidoDetalles = [];
 
         $detalles = json_decode($data['PedidoForm']['pedidoDetalles']);
 
         foreach ($detalles as $detalleData)
         {
-            $detalle = new PedidoDetalle();
-            $detalle->medicamento_id = $detalleData->id;
+            $detalle = null;
+            if(!$this->pedido->isNewRecord)
+            {
+                $detalle = PedidoDetalle::find()
+                    ->where(['pedido_id'=> $this->pedido->id])
+                    ->andWhere(['medicamento_id'=> $detalleData->id])
+                    ->one();
+            }
+            else {
+                $detalle = new PedidoDetalle();
+                $detalle->medicamento_id = $detalleData->id;
+            }
             $detalle->cantidad = $detalleData->cantidad;
             $this->_pedidoDetalles []= $detalle;
         }

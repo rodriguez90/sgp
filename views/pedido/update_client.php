@@ -24,4 +24,4 @@ $this->params['breadcrumbs'][] = 'Modificar';
     var pedidoId = '<?php echo $model->pedido->id; ?>';
 </script>
 
-<?php $this->registerJsFile('@web/js/pedido/update.js', ['depends' => ['app\assets\DataTableAsset']]) ?>
+<?php $this->registerJsFile('@web/js/pedido/update-client.js', ['depends' => ['app\assets\DataTableAsset']]) ?>

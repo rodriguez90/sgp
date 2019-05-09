@@ -103,7 +103,7 @@ var agregarMedicamento = function(medicamentoId) {
     var table = $('#data-table').DataTable();
 
     var row  = table.row(function (idx, data, node) {
-        return data.id === medicamentoId
+        return parseInt(data.id) === parseInt(medicamentoId)
 
     });
 
