@@ -148,16 +148,19 @@ class MedicamentoController extends Controller
 
         if(Yii::$app->request->isPost)
         {
-            $ficheros = UploadedFile::getInstances($model, 'imagen');
-            if(count($ficheros)) {
-                $nombreImagen = 'medicamento-images/' . $ficheros[0]->baseName . $model->id . '.' . $ficheros[0]->extension;
-                if($ficheros[0]->saveAs($nombreImagen)) {
-                    $model->imagen = $nombreImagen;
+            if($model->load(Yii::$app->request->post())) {
+                $ficheros = UploadedFile::getInstances($model, 'imagen');
+                if(count($ficheros)) {
+                    $nombreImagen = 'medicamento-images/' . $ficheros[0]->baseName . $model->id . '.' . $ficheros[0]->extension;
+                    $nombreImagenTmp = $nombreImagen;
+                    if($ficheros[0]->saveAs($nombreImagen)) {
+                        $model->imagen = $nombreImagenTmp;
+                    }
                 }
-            }
 
-            if ($model->load(Yii::$app->request->post()) && $model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
             }
         }
 

@@ -87,7 +87,7 @@ class PedidoSearch extends Pedido
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'id' => $this->id,
+            'pedido.id' => $this->id,
             'estado' => $this->estado,
             'usuario_id' => $this->usuario_id,
             'fecha_registro' => $this->fecha_registro,

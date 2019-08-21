@@ -58,10 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                             'attribute' => 'total',
                             'label' => 'Total'
                         ],
-                        [
-                            'class' => 'yii\grid\ActionColumn',
-                            'template' => '{view}'
-                        ],
                     ],
                     'options'=>['class' => 'table table-striped table-bordered table-condensed detail-view'],
                 ]); ?>
